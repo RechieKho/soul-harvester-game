@@ -9,30 +9,48 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Area2D",
+"base": "Mortal",
 "class": "Enemy",
 "language": "GDScript",
 "path": "res://Scenes/Enemy/Enemy.gd"
 }, {
 "base": "Area2D",
+"class": "Mortal",
+"language": "GDScript",
+"path": "res://Scripts/Mortal.gd"
+}, {
+"base": "RigidBody2D",
 "class": "Player",
 "language": "GDScript",
 "path": "res://Scenes/Player/Player.gd"
+}, {
+"base": "Mortal",
+"class": "SoulTree",
+"language": "GDScript",
+"path": "res://Scenes/Tree/SoulTree.gd"
 } ]
 _global_script_class_icons={
 "Enemy": "",
-"Player": ""
+"Mortal": "",
+"Player": "",
+"SoulTree": ""
 }
 
 [application]
 
 config/name="Soul Harvester"
+run/main_scene="res://Scenes/Battleground/Battleground.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+GameData="*res://Scripts/GameData.gd"
 
 [display]
 
-window/stretch/mode="viewport"
-window/stretch/aspect="keep"
+window/size/width=1280
+window/size/height=720
+window/size/resizable=false
 
 [gui]
 
@@ -44,4 +62,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+environment/default_clear_color=Color( 0.396078, 0.447059, 0.188235, 1 )
 environment/default_environment="res://default_env.tres"

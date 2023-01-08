@@ -1,43 +1,146 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Scenes/Enemy/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Battleground/SoulMeter.gd" type="Script" id=3]
+[ext_resource path="res://Scenes/VirtualJoystick/VirtualSlingshot.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Battleground/Battleground.gd" type="Script" id=5]
+[ext_resource path="res://Scenes/Battleground/Duration.gd" type="Script" id=6]
+[ext_resource path="res://Graphics/background.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/box.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/soul.png" type="Texture" id=9]
+[ext_resource path="res://Scenes/Battleground/BattlegroundFont.tres" type="DynamicFont" id=10]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32, 364 )
+extents = Vector2( 160, 644 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 32, 364 )
+extents = Vector2( 196, 640 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 512, 32 )
+extents = Vector2( 640, 192 )
 
 [sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 512, 32 )
+extents = Vector2( 640, 88 )
 
-[node name="Node2D" type="Node2D"]
+[node name="Battleground" type="Node2D"]
+script = ExtResource( 5 )
 
-[node name="Wall" type="Area2D" parent="."]
+[node name="Background" type="Sprite" parent="."]
+self_modulate = Color( 0.905882, 1, 0.52549, 1 )
+position = Vector2( 640, 360 )
+texture = ExtResource( 7 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="SoulMeter" type="Control" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -264.0
+margin_top = 24.0
+margin_right = -24.0
+margin_bottom = 88.0
+script = ExtResource( 3 )
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/SoulMeter"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -32.0
+margin_bottom = 38.0
+texture = ExtResource( 8 )
+patch_margin_left = 30
+patch_margin_top = 35
+patch_margin_right = 30
+patch_margin_bottom = 35
+
+[node name="Label" type="Label" parent="CanvasLayer/SoulMeter/NinePatchRect"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 112.0
+margin_top = -24.0
+margin_right = -32.0
+margin_bottom = 24.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 10 )
+text = "0/0"
+align = 1
+valign = 1
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/SoulMeter/NinePatchRect"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 16.0
+margin_top = -48.0
+margin_right = 108.0
+margin_bottom = 44.0
+texture = ExtResource( 9 )
+
+[node name="Duration" type="Control" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -96.0
+margin_top = 24.0
+margin_right = 96.0
+margin_bottom = 88.0
+script = ExtResource( 6 )
+duration = 140.0
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/Duration"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -24.0
+margin_bottom = 24.0
+texture = ExtResource( 8 )
+patch_margin_left = 30
+patch_margin_top = 35
+patch_margin_right = 30
+patch_margin_bottom = 35
+
+[node name="Label" type="Label" parent="CanvasLayer/Duration/NinePatchRect"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 24.0
+margin_top = -24.0
+margin_right = -32.0
+margin_bottom = 24.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 10 )
+text = "0s"
+align = 1
+valign = 1
+
+[node name="VirtualSlingshot" parent="." instance=ExtResource( 4 )]
+
+[node name="Wall" type="StaticBody2D" parent="."]
 collision_mask = 0
 
 [node name="Left" type="CollisionShape2D" parent="Wall"]
-position = Vector2( -32, 300 )
+position = Vector2( -160, 260 )
 shape = SubResource( 1 )
 
 [node name="Right" type="CollisionShape2D" parent="Wall"]
-position = Vector2( 1056, 300 )
+position = Vector2( 1472, 256 )
 shape = SubResource( 2 )
 
 [node name="Up" type="CollisionShape2D" parent="Wall"]
-position = Vector2( 512, -32 )
+position = Vector2( 640, -192 )
 shape = SubResource( 3 )
 
 [node name="Down" type="CollisionShape2D" parent="Wall"]
-position = Vector2( 512, 632 )
+position = Vector2( 640, 808 )
 shape = SubResource( 4 )
 
 [node name="Enemy" parent="." instance=ExtResource( 1 )]
-position = Vector2( 40, 40 )
+position = Vector2( 416, 272 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 557, 273 )
+
+[connection signal="timeout" from="CanvasLayer/Duration" to="." method="_on_Duration_timeout"]
+[connection signal="on_aiming" from="VirtualSlingshot" to="Player" method="aiming"]
+[connection signal="on_released" from="VirtualSlingshot" to="Player" method="shoot"]
+[connection signal="on_soul_count_changed" from="Player" to="CanvasLayer/SoulMeter" method="set_soul_count"]
